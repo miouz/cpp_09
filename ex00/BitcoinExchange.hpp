@@ -1,15 +1,18 @@
 #ifndef BITCOINEXCHANGE_HPP
 #define BITCOINEXCHANGE_HPP
 
-#include <list>
+#include <map>
 #include <string>
 #include <ios>
 #include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
 
 class BitcoinExchange
 {
 private:
-	std::list<std::string> dataBase_;
+	std::map<std::string, float> dataBase_;
 public:
 	BitcoinExchange(const std::string& fileName);
 	~BitcoinExchange();
@@ -17,8 +20,10 @@ public:
 	BitcoinExchange& operator=(const BitcoinExchange& other);
 
 	void setDataBase(const std::string& fileName);
-	bool isValidLine(std::list<std::string>::const_iterator& line) const;
-	void outputLine(std::list<std::string>::const_iterator& line) const;
+	bool isValidDataLine(const std::string& line) const;
+	void addLineToDataBase(const std::string& line);
+	void displayValueFromFile(const std::string& fileName) const;
+	void displayValueFromLine(const std::string& line) const;
 };
 
 #endif // !BITCOINEXCHANGE_HPP
