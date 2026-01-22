@@ -30,12 +30,14 @@ void BitcoinExchange::displayValueFromLine(const std::string& line) const
 
 void BitcoinExchange::displayValueFromFile(const std::string& fileName) const
 {
-	std::ifstream input(fileName.c_str(), std::ios::in);
+	std::fstream input;
+	input.open(fileName, std::ios::in);
+	// std::ifstream input(fileName.c_str(), std::ios::in);
 	std::string	line;
 	bool isFirstLine = true;
 
 	if (!input.is_open())
-		throw std::runtime_error("couldn't open input file");
+		throw std::runtime_error("could not open file");
 	while (std::getline(input, line))
 	{
 		if(isFirstLine == true)

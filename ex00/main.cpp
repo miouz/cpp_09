@@ -3,27 +3,21 @@
 #include <iostream>
 #include <stdexcept>
 
-bool isValidArg(char ** argv)
+std::string getFileName(int argc, char **argv)
 {
-	std::string arg1(argv[1]);
-	std::string arg2(argv[2]);
-	
-	if (arg1.find(".csv") == arg1.size() - 4 && arg2.empty() == false)
-		return true;
-	return false;
+	if (argc != 2)
+		throw std::invalid_argument("could not open file");
+	std::string fileName(argv[1]);
+	return (fileName);
 }
 
 int main(int argc, char **argv)
 {
-	if ( argc != 3 || isValidArg(argv) == false)
-	{
-		std::cout << "Error: need one .csv file and one input file\n";
-		exit(1);
-	}
-
+	
 	try {
-		BitcoinExchange rate(argv[1]);
-		rate.displayValueFromFile(argv[2]);
+		std::string fileName = getFileName(argc, argv);
+		BitcoinExchange btc("data.csv");
+		btc.displayValueFromFile(fileName);
 	} catch (std::exception& e) {
 		std::cout << "Error: " << e.what() << std::endl;
 		exit(1);	
