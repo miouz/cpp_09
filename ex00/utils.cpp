@@ -54,7 +54,7 @@ bool isValidDate(std::string& date)
 		if (date[4] == '-'
 			&& date[7] == '-')
 		{
-			getValidIntInRange(year, yearNum, 2009, 2999);
+			getValidIntInRange(year, yearNum, 0, 9999);
 			getValidIntInRange(month, monthNum, 1, 12);
 			if (monthNum == 2 && isLeapYear(yearNum))
 				daysRange[monthNum - 1] = 29;
