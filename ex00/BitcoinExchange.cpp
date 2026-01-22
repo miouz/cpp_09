@@ -14,3 +14,12 @@ BitcoinExchange::BitcoinExchange(const std::string& fileName)
 
 BitcoinExchange::~BitcoinExchange(){}
 
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other): dataBase_(other.dataBase_) {}
+
+BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other)
+{
+	if (this == &other)
+		return *this;
+	dataBase_ = other.dataBase_;
+	return *this;
+}
