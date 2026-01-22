@@ -23,6 +23,7 @@ public:
 	BitcoinExchange(const BitcoinExchange& other);
 	BitcoinExchange& operator=(const BitcoinExchange& other);
 
+	float getRateOfDay(const std::string& date) const;
 	void displayValueFromFile(const std::string& fileName) const;
 	void displayValueFromLine(const std::string& line) const;
 };

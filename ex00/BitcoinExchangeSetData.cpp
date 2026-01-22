@@ -8,11 +8,10 @@ bool BitcoinExchange::isValidDataLine(const std::string& line) const
 	std::string date = line.substr(0, commaPos);
 	std::string rate = line.substr(commaPos + 1);
 
-		if (isValidDate(date) == true
-			&& isValidRate(rate) == true)
-			return true;
+	if (isValidDate(date) == true
+		&& isValidRate(rate) == true)
+		return true;
 	return false;
-
 }
 
 void BitcoinExchange::addLineToDataBase(const std::string& line)
@@ -38,8 +37,10 @@ void BitcoinExchange::setDataBase(const std::string& fileName)
 		if (lineNum == 1)
 			continue;
 		if (isValidDataLine(line) == false)
+		{
 			std::cout << "line " << lineNum << " format is not correct: "
-				<< line <<" \" continued" << "\n";
+				<< line <<" continued" << "\n";
+		}
 		else
 			addLineToDataBase(line);
 	}

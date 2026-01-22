@@ -1,7 +1,5 @@
 #include "BitcoinExchange.hpp"
 
-static const float inputValueMin = 0;
-static const float inputValueMax = 1000;
 
 /**
  * @brief constructor parse line by line to set the dataBase
@@ -13,4 +11,6 @@ BitcoinExchange::BitcoinExchange(const std::string& fileName)
 {
 	setDataBase(fileName);
 }
+
+BitcoinExchange::~BitcoinExchange(){}
 
