@@ -1,5 +1,5 @@
-#ifndef UTILS_CPP
-#define UTILS_CPP
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <string>
 #include <cerrno>
@@ -11,4 +11,4 @@ void getValidIntInRange(std::string& str, int& result, long int min, long int ma
 bool isValidDate(std::string& date);
 bool isValidRate(std::string& rate);
 
-#endif // !UTILS_CPP
+#endif // !UTILS_HPP
