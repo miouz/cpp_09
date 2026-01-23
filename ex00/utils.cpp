@@ -75,7 +75,6 @@ bool isValidRate(std::string& rate)
 			0, std::numeric_limits<float>::max());
 		return true;
 	} catch (std::exception& e) {
-		std::cout << "not float because" << e.what() << std::endl;
 		return false;
 	}
 }
