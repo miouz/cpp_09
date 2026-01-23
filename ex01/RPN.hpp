@@ -10,29 +10,33 @@ class RPN
 private:
 	enum TokenType
 	{
-		NUM,
 		PLUS,
 		MINUS,
 		MULTIPLY,
-		DIVISION
+		DIVISION,
+		NUM
 	};
 
 	std::string inputStr_;
 	std::stack<int> numStack_;
 
 	RPN();
-	int getNumber(const std::string& token);
+	int getNumber(const std::string& token) const;
 	void addNumber(int number);
-	TokenType getType(const std::string& token);
+	TokenType getValidType(const std::string& token) const;
 
 	template<typename Func>
 	void evalOperatorOnStack(Func operatorFunc)
 	{
 		if (numStack_.size() < 2)
-			throw std::runtime_error("less than 2 numbers rest");
+			throw std::runtime_error("no suffisant numbers to applay operator");
 		int last = numStack_.top();
 		numStack_.pop();
-		numStack_.top() = static_cast<int>(operatorFunc(numStack_.top(), last));
+		long int result =(this->*operatorFunc)(numStack_.top(), last);
+		if (result > std::numeric_limits<int>::max()
+			|| result < std::numeric_limits<int>::min())
+			throw std::out_of_range("overflow or underflow occured");
+		numStack_.top() = static_cast<int>(result);
 	}
 public:
 	RPN(const std::string& inputStr);
