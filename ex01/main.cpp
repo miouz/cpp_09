@@ -13,6 +13,7 @@ int main(int argc, char** argv)
 	try {
 		std::string arg = getArg(argc, argv);
 		RPN rpn(arg);
+		rpn.evaluateInput();
 		std::cout << rpn.getResult() << std::endl;
 	} catch (std::exception& e) {
 		std::cout << "Error " << e.what() << std::endl;
