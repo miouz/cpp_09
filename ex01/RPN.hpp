@@ -29,13 +29,13 @@ private:
 	void evalOperatorOnStack(Func operatorFunc)
 	{
 		if (numStack_.size() < 2)
-			throw std::runtime_error("no suffisant numbers to applay operator");
+			throw std::runtime_error("no suffisant numbers to apply operator");
 		int last = numStack_.top();
 		numStack_.pop();
 		long int result =(this->*operatorFunc)(numStack_.top(), last);
 		if (result > std::numeric_limits<int>::max()
 			|| result < std::numeric_limits<int>::min())
-			throw std::out_of_range("overflow or underflow occured");
+			throw std::out_of_range("overflow occured");
 		numStack_.top() = static_cast<int>(result);
 	}
 public:

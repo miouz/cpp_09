@@ -30,22 +30,19 @@ int RPN::getResult() const
 
 long int RPN::operatorPlus(int a, int b) const
 {
-	long int result = a + b;
-	if (result > std::numeric_limits<int>::max()
-		|| result < std::numeric_limits<int>::min())
-		throw std::out_of_range("plus operator");
+	long int result = static_cast<long int>(a) + b;
 	return result;
 }
 
 long int RPN::operatorMinus(int a, int b) const
 {
-	long int result = a - b;
+	long int result = static_cast<long int>(a) - b;
 	return result;
 }
 
 long int RPN::operatorMultiply(int a, int b) const
 {
-	long int result = a * b;
+	long int result = static_cast<long int>(a) * b;
 	return result;
 }
 
@@ -53,7 +50,7 @@ long int RPN::operatorDivision(int a, int b) const
 {
 	if (b == 0)
 		throw std::runtime_error("division by 0");
-	long int result = a / b;
+	long int result = static_cast<long int>(a) / b;
 	return result;
 }
 
