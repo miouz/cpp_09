@@ -39,15 +39,15 @@ void BitcoinExchange::displayValueFromFile(const std::string& fileName) const
 		throw std::runtime_error("could not open file");
 	while (std::getline(input, line))
 	{
-		if(isFirstLine == true && line == "date | value")
+		if(isFirstLine == false
+			|| (isFirstLine == true && line != "date | value"))
 		{
-			isFirstLine = false;
-			continue;
+			try {
+			displayValueFromLine(line);
+			} catch (std::exception& e) {
+				std::cout << "Error: " << e.what()<< std::endl;
+			}
 		}
-		try {
-		displayValueFromLine(line);
-		} catch (std::exception& e) {
-			std::cout << "Error: " << e.what()<< std::endl;
-		}
+		isFirstLine = false;
 	}
 }
