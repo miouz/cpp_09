@@ -32,7 +32,6 @@ void BitcoinExchange::displayValueFromFile(const std::string& fileName) const
 {
 	std::fstream input;
 	input.open(fileName, std::ios::in);
-	// std::ifstream input(fileName.c_str(), std::ios::in);
 	std::string	line;
 	bool isFirstLine = true;
 
@@ -40,7 +39,7 @@ void BitcoinExchange::displayValueFromFile(const std::string& fileName) const
 		throw std::runtime_error("could not open file");
 	while (std::getline(input, line))
 	{
-		if(isFirstLine == true)
+		if(isFirstLine == true && line == "date | value")
 		{
 			isFirstLine = false;
 			continue;
