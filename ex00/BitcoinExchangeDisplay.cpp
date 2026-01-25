@@ -24,7 +24,7 @@ void BitcoinExchange::displayValueFromLine(const std::string& line) const
 		throw std::invalid_argument("bad date format: " + date);
 	getValidPositiveFloatInRange(value, valueNum, evaluateValueMin, evaluateValueMax );
 	float rate = getRateOfDay(date);
-	double outputValue = rate * valueNum;
+	double outputValue = static_cast<double>(rate) * valueNum;
 	std::cout << date << "=>" << value << " = " << outputValue << std::endl;
 }
 
