@@ -30,6 +30,28 @@ void sortPair(std::vector<int>& nums, std::size_t numsInPair)
 	}
 }
 
+void recursiveBinaryInsertNthPair(std::vector<int>& nums, std::size_t numsInPair, std::size_t N)
+{
+	std::vector<int>::iterator toInsert = nums.begin() + N * numsInPair * 2 - 1;
+
+}
+
+/**
+ * @brief insert Nth smaller group b[N] in pairs into the mainchain a , N is in jacobsthal's order
+ *
+ * @param nums the vector contains all numbers with all larger elements in pairs recursively sorted
+ * @param numsInPair number of elements in each pair
+ */
+void insertion(std::vector<int>&nums, std::size_t numsInPair)
+{
+	size_t amountOfsmallerPair = (nums.size() / numsInPair) % 2 + (nums.size() / numsInPair) / 2;
+	for (size_t index = 1; jacobsthal[index] <= amountOfsmallerPair; index++)
+	{
+		for (size_t NthSmallerPair = jacobsthal[index]; NthSmallerPair > jacobsthal[index - 1]; NthSmallerPair--)
+		recursiveBinaryInsertNthPair(nums, numsInPair, NthSmallerPair);
+	}
+}
+
 /**
  * @brief recursive Merge Insertion sort
  *
