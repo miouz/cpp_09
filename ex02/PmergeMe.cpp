@@ -58,11 +58,10 @@ void initChainAB(std::vector<int>& nums, std::vector<int>& chainAOriginal, std::
 	}
 }
 
-void BinaryInsertNthPair(std::vector<int>& nums, std::vector<int>& mainchainA, std::vector<int>& toInsertB,
-						 const std::vector<int>::iterator& toCompareB, std::size_t numsInPair, std::vector<int>& insertionTrack)
+std::vector<int>::iterator binaryInsertNthPair( const std::vector<int>::iterator& toCompareB,
+											   std::size_t numsInPair, std::vector<int>& nums, std::vector<int>::iterator& end)
 {
-	size_t amountOfPairsInA = mainchainA.size() / numsInPair;
-	std::vector<int>::iterator sortedUntilOnA = mainchainA.begin() + amountOfPairsInA / 2 * numsInPair + numsInPair - 1;
+
 }
 
 /**
@@ -78,7 +77,6 @@ void insertion(std::vector<int>& nums, std::size_t numsInPair)
 	size_t amountOfBiggerPair = amountOfSmallerPair % 2 > 0 ? amountOfSmallerPair - 1 : amountOfSmallerPair;
 	std::vector<int> chainAOriginal;
 	chainAOriginal.reserve(amountOfBiggerPair * numsInPair);
-	std::vector<int> insertionTrack(amountOfBiggerPair);
 	std::vector<int> chainBOriginal;
 	chainBOriginal.reserve(amountOfSmallerPair * numsInPair);
 	initChainAB(nums, chainAOriginal, chainBOriginal, numsInPair);
@@ -99,13 +97,17 @@ void insertion(std::vector<int>& nums, std::size_t numsInPair)
 
 	for (size_t index = 1; jacobsthal[index] <= amountOfSmallerPair; index++)
 	{
-		//add chainA from A[jacobsthal[index - 1] ~ to A[jacobsthal[index]] to nums to insert B into it
+		//add chainA from A[jacobsthal[index - 1] ~ to A[jacobsthal[index]] to mainchain(the reseted vector nums) to insert B into it
 		size_t endOfAToSort = jacobsthal[index];
 		size_t beginOfAToSort = jacobsthal[index - 1];
 		std::vector<int>::iterator itBeginOfAToSort = chainAOriginal.begin() + (beginOfAToSort - 1) * numsInPair;
 		std::vector<int>::iterator itEndOfAToSort = chainAOriginal.begin() + endOfAToSort * numsInPair - 1; 
+		std::vector<int>::iterator newAddedOnMainchainFromChainA = nums.end();
 		nums.insert(nums.end(), itBeginOfAToSort, itEndOfAToSort + 1);
+		//creat and initialize the vector to track how many elements inserted before each A[N]
+		std::vector<int> insertionTrack(endOfAToSort - beginOfAToSort);
 		std::cout << "indexOfASorted " << endOfAToSort << "\n";
+
 		for (size_t NthPairInB = jacobsthal[index]; NthPairInB > jacobsthal[index - 1]; NthPairInB--)
 		{
 			std::vector<int>::iterator	toCompareB = chainBOriginal.begin() + numsInPair *(NthPairInB - 2) + (numsInPair - 1);
@@ -114,8 +116,20 @@ void insertion(std::vector<int>& nums, std::size_t numsInPair)
 			std::cout << "toCompareB is " << *toCompareB << "\n";
 			std::cout << "numsInPair is " << numsInPair << "\n";
 			
-			BinaryInsertNthPair(nums, chainAOriginal, chainBOriginal,
-					   toCompareB, numsInPair, insertionTrack);
+			//find A[N] position on mainchain nums
+			//find how many elements have been inserted from newAddedOnMainchainFromChainA to A[N]
+			std::size_t inserted = 0;
+			for (size_t i = 0; i < NthPairInB - jacobsthal[index - 1];i++)
+				inserted += insertionTrack[i];
+			std::vector<int>::iterator NthPairOfAOnMain = newAddedOnMainchainFromChainA + inserted;
+			std::vector<int>::iterator toCompareUntilOnMain = NthPairOfAOnMain - numsInPair;
+			//binary research from B1, A1, A2... until A[N](exclus)
+			std::vector<int>::iterator toInsertOnMain = binaryInsertNthPair(toCompareB, numsInPair, nums, toCompareUntilOnMain);
+			//update the insertionTrack
+			if (toInsertOnMain <= newAddedOnMainchainFromChainA)
+				insertionTrack[0]++;
+			else
+				insertionTrack[(toInsertOnMain - newAddedOnMainchainFromChainA) / numsInPair]++;
 		}
 	}
 }
