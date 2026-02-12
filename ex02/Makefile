@@ -6,8 +6,9 @@ NAME := PmergeMe
 
 MAKE_CMD ?= $(MAKE)
 CXX := c++
-CXXFLAGS := -Wall -Wextra -Werror -g -fsanitize=address
+CXXFLAGS := -Wall -Wextra -Werror
 CXXFLAGS += -std=c++98
+DEBUG_FLAGS := -DDEBUG -g -O0
 
 # ============================================================================ #
 #                                DIRECTORIES                                   #
@@ -76,6 +77,11 @@ test: $(NAME)
 	@chmod +x $(TEST_SCRIPT)
 	@printf "$(BLUE)Running Tests Files\n$(RESET)"
 	@./$(TEST_SCRIPT)
+
+# Debug build (with debug prints)
+debug: CXXFLAGS += $(DEBUG_FLAGS)
+debug: fclean $(NAME)
+	@printf "$(YELLOW)⚠ $(NAME) built with debug output enabled$(RESET)"
 
 # ============================================================================ #
 #                                 🍻CLEANNING                                    #
