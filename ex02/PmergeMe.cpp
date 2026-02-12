@@ -1,7 +1,10 @@
 #include "PmergeMe.hpp"
 
-static const size_t jacobsthal[11] = {1, 3, 5, 11, 21,
-	43, 85, 171, 341, 683, 1365};
+static size_t jacobsthalSuit[19] = {1, 3, 5, 11, 21,
+	43, 85, 171, 341, 683, 1365, 2731,
+	5461, 10923, 21845, 43691, 87381, 174763, 349525};
+
+static size_t count = 0;
 
 /**
  * @brief finds larger element of each pair and place it on the most right place
@@ -20,7 +23,7 @@ void sortPair(std::vector<int>& nums, std::size_t numsInPair)
 		secondNumInPair += numsInPair * 2)
 	{
 		std::vector<int>::iterator firstNumInPair = secondNumInPair - numsInPair;
-		if (*firstNumInPair > *secondNumInPair)
+		if (++count && *firstNumInPair > *secondNumInPair)
 		{
 			std::vector<int>::iterator firstNumInFirstPair = firstNumInPair - (numsInPair - 1);
 			std::vector<int>::iterator firstNumInSecondPair = secondNumInPair - (numsInPair - 1);
@@ -58,10 +61,27 @@ void initChainAB(std::vector<int>& nums, std::vector<int>& chainAOriginal, std::
 	}
 }
 
-std::vector<int>::iterator binaryInsertNthPair( const std::vector<int>::iterator& toCompareB,
-											   std::size_t numsInPair, std::vector<int>& nums, std::vector<int>::iterator& end)
+std::vector<int>::iterator binaryInsertNthPair( std::vector<int>::iterator toCompareB,
+											   std::size_t numsInPair, std::vector<int>& nums, std::vector<int>::iterator end)
 {
-
+	std::vector<int>::iterator begin = nums.begin() + numsInPair - 1;
+	std::vector<int>::iterator middle;
+	int size = 0;
+	while ((end - begin)/numsInPair > 1)
+	{
+		size = (end - begin)/numsInPair;
+		middle = begin + ((size - 1) / 2 + 1) * numsInPair;
+		if (++count && *toCompareB <= *middle)
+			end = middle;
+		else
+		 	begin = middle + numsInPair;
+	}
+	if (++count && *toCompareB <= *begin)
+		return begin - (numsInPair - 1);
+	else if (++count && begin != end && *toCompareB <= *end)
+		return end - (numsInPair - 1);
+	else
+	 	return end + 1;
 }
 
 /**
@@ -73,65 +93,154 @@ std::vector<int>::iterator binaryInsertNthPair( const std::vector<int>::iterator
  */
 void insertion(std::vector<int>& nums, std::size_t numsInPair)
 {
-	size_t amountOfSmallerPair = (nums.size() / numsInPair) % 2 + (nums.size() / numsInPair) / 2;
-	size_t amountOfBiggerPair = amountOfSmallerPair % 2 > 0 ? amountOfSmallerPair - 1 : amountOfSmallerPair;
+	std::vector<size_t> jacobsthal(jacobsthalSuit, jacobsthalSuit + 19);
+	size_t amountOfTotalPair = nums.size() / numsInPair;
+	size_t amountOfSmallerPair = amountOfTotalPair % 2 + amountOfTotalPair / 2;
+	size_t amountOfBiggerPair = amountOfTotalPair - amountOfSmallerPair;
+	std::vector<int> rested;
+	if (nums.size() > amountOfTotalPair * numsInPair)
+	{
+		rested.reserve(nums.size() - amountOfTotalPair * numsInPair);
+		rested.insert(rested.begin(),nums.begin() + (amountOfTotalPair) * numsInPair, nums.end());
+
+	}
+
+	#ifdef DEBUG
+	{
+		std::cout << "==========================================================================\n";
+		std::cout << "nums is ";
+		PmergeMe::printContent(nums);
+		std::cout << "numsInPair is " << numsInPair << "\n";
+		std::cout << "rested is ";
+		PmergeMe::printContent(rested);
+	}
+	#endif
+
 	std::vector<int> chainAOriginal;
 	chainAOriginal.reserve(amountOfBiggerPair * numsInPair);
 	std::vector<int> chainBOriginal;
 	chainBOriginal.reserve(amountOfSmallerPair * numsInPair);
 	initChainAB(nums, chainAOriginal, chainBOriginal, numsInPair);
-	//clear num for using as mainchain C
+	//using nums as mainchain C
 	nums.clear();
-	//add b1 to mainchain C
-	nums.insert(nums.end(), chainBOriginal.begin(), chainBOriginal.begin() + numsInPair);
+	nums.reserve(chainAOriginal.size() + chainBOriginal.size() + rested.size());
+	//add b1 a1 to mainchain C
+	nums.insert(nums.begin(), chainBOriginal.begin(), chainBOriginal.begin() + numsInPair);
+	nums.insert(nums.begin() + numsInPair, chainAOriginal.begin(), chainAOriginal.begin() + numsInPair);
 
 
-	//PRINT_TEST
-	std::cout << "numsInPair is " << numsInPair << "\n";
-	std::cout << "chainAOriginal:\n";
-	PmergeMe::printContent(chainAOriginal);
-	
-	std::cout << "chainBOriginal:\n";
-	PmergeMe::printContent(chainBOriginal);
-
-
-	for (size_t index = 1; jacobsthal[index] <= amountOfSmallerPair; index++)
+	#ifdef DEBUG
 	{
-		//add chainA from A[jacobsthal[index - 1] ~ to A[jacobsthal[index]] to mainchain(the reseted vector nums) to insert B into it
-		size_t endOfAToSort = jacobsthal[index];
-		size_t beginOfAToSort = jacobsthal[index - 1];
+		std::cout << "chainAOriginal:\n";
+		PmergeMe::printContent(chainAOriginal);
+		std::cout << "chainBOriginal:\n";
+		PmergeMe::printContent(chainBOriginal);
+		std::cout << "mainchain now:\n";
+		PmergeMe::printContent(nums);
+		std::cout << "insertion in jacobsthal order begin\n";
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+	}
+	#endif
+
+	for(std::vector<size_t>::const_iterator itJacob = jacobsthal.begin(); itJacob != jacobsthal.end(); itJacob++)
+	{
+		if (*itJacob == 1)
+			continue;
+		std::size_t NthPairInB = *itJacob;
+		//if less than *itJacob groups but more than *(itJacob -1)
+		if (*itJacob * numsInPair > chainBOriginal.size() && (*(itJacob - 1) + 1) * numsInPair <= chainBOriginal.size())
+			NthPairInB = chainBOriginal.size() / numsInPair;
+		//if less than &itJacob groups
+		else if (*itJacob * numsInPair > chainBOriginal.size())
+			break;
+
+		//add chainA from A[NthPairInB] ~ to A[*(itJacob -1) + 1](inclus) to mainchain(the reseted vector nums) to insert B into it
+		size_t endOfAToSort = NthPairInB;
+		//if A[N] doesn't exist
+		if (chainAOriginal.size() < NthPairInB * numsInPair)
+			endOfAToSort = chainAOriginal.size() / numsInPair;
+		size_t beginOfAToSort = *(itJacob - 1) + 1;
+		size_t newAddedOnMainchain = nums.size();
 		std::vector<int>::iterator itBeginOfAToSort = chainAOriginal.begin() + (beginOfAToSort - 1) * numsInPair;
 		std::vector<int>::iterator itEndOfAToSort = chainAOriginal.begin() + endOfAToSort * numsInPair - 1; 
-		std::vector<int>::iterator newAddedOnMainchainFromChainA = nums.end();
 		nums.insert(nums.end(), itBeginOfAToSort, itEndOfAToSort + 1);
-		//creat and initialize the vector to track how many elements inserted before each A[N]
-		std::vector<int> insertionTrack(endOfAToSort - beginOfAToSort);
-		std::cout << "indexOfASorted " << endOfAToSort << "\n";
+		
 
-		for (size_t NthPairInB = jacobsthal[index]; NthPairInB > jacobsthal[index - 1]; NthPairInB--)
+		#ifdef DEBUG
 		{
-			std::vector<int>::iterator	toCompareB = chainBOriginal.begin() + numsInPair *(NthPairInB - 2) + (numsInPair - 1);
-			//PRINT_TEST
-			std::cout << "index is " <<NthPairInB << "\n";
-			std::cout << "toCompareB is " << *toCompareB << "\n";
-			std::cout << "numsInPair is " << numsInPair << "\n";
-			
-			//find A[N] position on mainchain nums
-			//find how many elements have been inserted from newAddedOnMainchainFromChainA to A[N]
-			std::size_t inserted = 0;
-			for (size_t i = 0; i < NthPairInB - jacobsthal[index - 1];i++)
-				inserted += insertionTrack[i];
-			std::vector<int>::iterator NthPairOfAOnMain = newAddedOnMainchainFromChainA + inserted;
-			std::vector<int>::iterator toCompareUntilOnMain = NthPairOfAOnMain - numsInPair;
-			//binary research from B1, A1, A2... until A[N](exclus)
-			std::vector<int>::iterator toInsertOnMain = binaryInsertNthPair(toCompareB, numsInPair, nums, toCompareUntilOnMain);
-			//update the insertionTrack
-			if (toInsertOnMain <= newAddedOnMainchainFromChainA)
-				insertionTrack[0]++;
-			else
-				insertionTrack[(toInsertOnMain - newAddedOnMainchainFromChainA) / numsInPair]++;
+			std::cout << "*itJacob is " << *itJacob << "\n";
+			std::cout << "added A"<< beginOfAToSort <<" until A" << endOfAToSort << "to mainchain\n";
+			std::cout << "to insert B"<< NthPairInB <<" until B" << *(itJacob -1) + 1 << "to mainchain\n";
+			std::cout << "mainchain after A added ";
+			PmergeMe::printContent(nums);
+			std::cout << "==========================================================================\n";
 		}
+		#endif
+
+		//creat and initialize the vector to track how many elements inserted before each A[N]
+		// std::vector<int> insertionTrack(endOfAToSort - beginOfAToSort + 1, 0);
+		for (size_t toInsertNthPairInB = NthPairInB; toInsertNthPairInB > *(itJacob - 1); toInsertNthPairInB--)
+		{
+			if (toInsertNthPairInB == 1)
+				break ;
+			std::vector<int>::iterator	toCompareB = chainBOriginal.begin() + numsInPair *(toInsertNthPairInB - 1) + (numsInPair - 1);
+
+			#ifdef DEBUG
+			{
+				std::cout << "inserting : B" <<toInsertNthPairInB << "\n";
+				std::cout << " = " << *toCompareB << "\n";
+				std::cout << "numsInPair is " << numsInPair << "\n";
+			}
+			#endif
+
+			//find A[N] position on mainchain nums
+			std::vector<int>::iterator toCompareUntilOnA;
+			std::vector<int>::iterator toCompareUntilOnMain;
+			//if A[N] doesnt exist, then compare until A[N -1](inclus) on mainchain
+			if (toInsertNthPairInB * numsInPair > chainAOriginal.size())
+			{
+				toCompareUntilOnA = chainAOriginal.end() - 1;
+				toCompareUntilOnMain = std::find(nums.begin() + newAddedOnMainchain, nums.end(), *toCompareUntilOnA);
+
+			#ifdef DEBUG
+			{
+				std::cout << "A" << toInsertNthPairInB << "doesnt exit:\n" << "compare using binary insertion until A" << chainAOriginal.size()/numsInPair <<" (INCLUS)"
+						<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
+			}
+			#endif
+			}
+			// if A[N] exits, then compare until A[N](exclus) on mainchain
+			else {
+				toCompareUntilOnA = chainAOriginal.begin() + toInsertNthPairInB * numsInPair - 1;
+				toCompareUntilOnMain = std::find(nums.begin() + newAddedOnMainchain, nums.end(), *toCompareUntilOnA);
+				toCompareUntilOnMain -= numsInPair;
+			#ifdef DEBUG
+			{
+					std::cout << "newAddedOnMainchain = " << newAddedOnMainchain << "\n"
+						<< "find begin from " << *(nums.begin() + newAddedOnMainchain) << "until " << *(nums.end() -1) <<"\n";
+				std::cout << "A" << toInsertNthPairInB << "EXIST:\n" << "compare using binary insertion BEFORE A" << *toCompareUntilOnA <<" (EXCLUS)"
+						<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
+			}
+			#endif
+			}
+
+			//binary research from B1, A1, A2... until A[N]-numsInPair(inclus)
+			std::vector<int>::iterator toInsertOnMain = binaryInsertNthPair(toCompareB, numsInPair, nums, toCompareUntilOnMain);
+		#ifdef DEBUG
+			std::cout << "to insert at place of " << *toInsertOnMain << "\n";
+		#endif
+			if (toInsertOnMain <= nums.begin() + newAddedOnMainchain)
+				newAddedOnMainchain += numsInPair;
+			nums.insert(toInsertOnMain, toCompareB - (numsInPair - 1), toCompareB + 1 );
+		#ifdef DEBUG
+			std::cout << "after insertion of B is ";
+			PmergeMe::printContent(nums);
+			std::cout << "==========================================================================\n";
+		#endif
+		}
+		
 	}
+	nums.insert(nums.end(),rested.begin(), rested.end());
 }
 
 /**
@@ -142,18 +251,10 @@ void insertion(std::vector<int>& nums, std::size_t numsInPair)
  */
 void PmergeMe::recursiveSort(std::vector<int>& nums, std::size_t numsInPair)
 {
-	//PRINT_TEST
-	std::cout << "numsInPair is " << numsInPair<< "\n";
-	std::cout << "vector at begin of recursive:\n";
-	PmergeMe::printContent(nums);
-
 	sortPair(nums, numsInPair);
-
-	//PRINT_TEST
-	std::cout << "after sortPair:\n";
-	PmergeMe::printContent(nums);
 	if (nums.size() / numsInPair == 2)
 		return ;
 	recursiveSort(nums, numsInPair * 2);
 	insertion(nums, numsInPair);
+	std::cout << "COMPARASION:" << count <<"\n";
 }
