@@ -144,8 +144,8 @@ void updateMainchain(T& nums, size_t numsInPair, size_t NthPairInB,
 	#ifdef DEBUG
 	{
 		std::cout << "jacobsthal[i] is " << jacobsthal[i] << "\n";
-		std::cout << "added A"<< beginOfAToSort <<" until A" << endOfAToSort << "to mainchain\n";
-		std::cout << "to insert B"<< NthPairInB <<" until B" << jacobsthal[i - 1] + 1 << "to mainchain\n";
+		std::cout << "added A"<< beginOfAToSort <<" until A" << endOfAToSort << " to mainchain\n";
+		std::cout << "to insert B"<< NthPairInB <<" until B" << jacobsthal[i - 1] + 1 << " to mainchain\n";
 		std::cout << "mainchain after A added ";
 		PmergeMe::printContent(nums);
 		std::cout << "==========================================================================\n";
@@ -180,8 +180,6 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 
 	#ifdef DEBUG
 	{
-			std::cout << "newAddedOnMainchain = " << newAddedOnMainchain << "\n"
-				<< "find begin from " << *(nums.begin() + newAddedOnMainchain) << "until " << *(nums.end() -1) <<"\n";
 		std::cout << "A" << toInsertNthPairInB << "doesnt exit:\n" << "compare using binary insertion until A" << chainAOriginal.size()/numsInPair <<" (INCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
@@ -194,8 +192,6 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 		toCompareUntilOnMain -= numsInPair;
 	#ifdef DEBUG
 	{
-			std::cout << "newAddedOnMainchain = " << newAddedOnMainchain << "\n"
-				<< "find begin from " << *(nums.begin() + newAddedOnMainchain) << "until " << *(nums.end() -1) <<"\n";
 		std::cout << "A" << toInsertNthPairInB << " EXIST:\n" << "compare using binary insertion BEFORE A" << *toCompareUntilOnA <<" (EXCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
@@ -240,8 +236,8 @@ void insertion(T& nums, size_t numsInPair)
 
 			#ifdef DEBUG
 			{
-				std::cout << "inserting : B" <<toInsertNthPairInB << "\n";
-				std::cout << " = " << *toCompareB << "\n";
+				std::cout << "inserting : B" <<toInsertNthPairInB 
+				<< " = " << *toCompareB << "\n";
 				std::cout << "numsInPair is " << numsInPair << "\n";
 			}
 			#endif

@@ -1,13 +1,25 @@
 #include "PmergeMe.hpp"
+#include <bits/types/struct_timeval.h>
+#include <cstddef>
 #include <vector>
 #include <deque>
+#include <ctime>
+#include <sys/time.h>
 
+double getUtime()
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000000.0 + tv.tv_usec);
+}
 
 int main(int argc, char** argv)
 {
 	try {
 		count = 0;
 		std::vector<int> numsVector;
+		double startTime = getUtime();
 		PmergeMe::getNumsFromArg(argc, argv, numsVector);
 		std::cout << "integer sequence before sorting :\n";
 		PmergeMe::printContent(numsVector);
