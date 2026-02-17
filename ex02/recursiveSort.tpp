@@ -291,4 +291,16 @@ void PmergeMe::recursiveSort(T& nums, std::size_t numsInPair)
 	std::cout << "COMPARASION:" << count <<"\n";
 }
 
+template T
+void getNumsFromArg(int argc, char **argv, T& nums)
+{
+	if (argc < 2)
+		throw std::invalid_argument("need arguments");
+	if (argc > static_cast<int>(jacobsthal[JACOBSTHAL_MAX - 1]))
+		throw std::invalid_argument("too many numbers");
+	reserveIfPossible(nums, argc - 1);
+	for (std::size_t i = 1; argv[i]; i++)
+		nums.push_back(getNumber(argv[i]));
+}
+
 #endif

@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 static const size_t JACOBSTHAL_MAX = 19;
 
