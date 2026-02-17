@@ -16,7 +16,7 @@ void getNumsFromArg(int argc, char **argv, std::vector<int>& nums)
 {
 	if (argc < 2)
 		throw std::invalid_argument("need arguments");
-	if (argc > jacobsthal[JACOBSTHAL_MAX - 1])
+	if (argc > static_cast<int>(jacobsthal[JACOBSTHAL_MAX - 1]))
 		throw std::invalid_argument("too many numbers");
 	nums.reserve(argc - 1);
 	for (std::size_t i = 1; argv[i]; i++)
