@@ -1,9 +1,9 @@
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
-#include <vector>
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <limits>
 
 static const size_t JACOBSTHAL_MAX = 19;
 
@@ -16,13 +16,16 @@ static size_t count = 0;
 class PmergeMe
 {
 	private:
+
 	public:
 	template<typename T>
 	static void recursiveSort(T& num, std::size_t numsInPair);
 	template<typename T>
-	static void printContent(const T& container)
+	static void getNumsFromArg(int argc, char **argv, T& nums);
+	template<typename T>
+	static void printContent(T& container)
 	{
-		for (typename T::const_iterator it = container.cbegin(); it != container.cend(); it++)
+		for (typename T::iterator it = container.begin(); it != container.end(); it++)
 			std::cout << std::setw(5)<< *it << " ";
 		std::cout << std::endl;
 	}

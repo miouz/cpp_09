@@ -1,11 +1,7 @@
 #ifndef RECURSIVESORT_TPP
 #define RECURSIVESORT_TPP
 
-template<typename T>
-void reserveIfPossible(T& container, size_t n){(void)container; (void)n;}
-
-template<typename U>
-void reserveIfPossible(std::vector<U>& container, size_t n) { container.reserve(n);}
+#include <vector>
 
 /**
  * @brief finds larger element of each pair and place it on the most right place
@@ -20,11 +16,11 @@ void reserveIfPossible(std::vector<U>& container, size_t n) { container.reserve(
 template<typename T>
 void sortPair(T& nums, size_t numsInPair)
 {
-	for ( typename T::iterator secondNumInPair = nums.begin() + (numsInPair * 2 - 1);
-		secondNumInPair < nums.end();
-		secondNumInPair += numsInPair * 2)
-	{
-		typename T::iterator firstNumInPair = secondNumInPair - numsInPair;
+	size_t pairCount = nums.size() / (numsInPair * 2);
+    for (size_t i = 0; i < pairCount; i++)
+    {
+        typename T::iterator firstNumInPair  = nums.begin() + (numsInPair - 1) + (i * numsInPair * 2);
+		typename T::iterator secondNumInPair = firstNumInPair + numsInPair;
 		if (*firstNumInPair > *secondNumInPair)
 		{
 			typename T::iterator firstNumInFirstPair = firstNumInPair - (numsInPair - 1);
@@ -32,6 +28,7 @@ void sortPair(T& nums, size_t numsInPair)
 			std::swap_ranges(firstNumInFirstPair,
 					firstNumInSecondPair, firstNumInSecondPair);
 		}
+		firstNumInPair += numsInPair * 2;
 		++count;
 	}
 }
@@ -51,13 +48,8 @@ void initChainsABRested(T& nums, size_t numsInPair, T& chainAOriginal,
 						 T& chainBOriginal, T& rested)
 {
 	size_t amountOfTotalPair = nums.size() / numsInPair;
-	size_t amountOfSmallerPair = amountOfTotalPair % 2 + amountOfTotalPair / 2;
-	size_t amountOfBiggerPair = amountOfTotalPair - amountOfSmallerPair;
 	if (nums.size() > amountOfTotalPair * numsInPair)
-	{
-		reserveIfPossible(rested, nums.size() - amountOfTotalPair * numsInPair);
 		rested.insert(rested.begin(), nums.begin() + (amountOfTotalPair) * numsInPair, nums.end());
-	}
 
 	#ifdef DEBUG
 	{
@@ -70,8 +62,6 @@ void initChainsABRested(T& nums, size_t numsInPair, T& chainAOriginal,
 	}
 	#endif
 
-	reserveIfPossible(chainAOriginal, amountOfBiggerPair * numsInPair);
-	reserveIfPossible(chainBOriginal, amountOfSmallerPair * numsInPair);
 
 	//init chainA and B
 	for (std::size_t NthPair = 0; NthPair < nums.size() / numsInPair; NthPair++)
@@ -86,7 +76,6 @@ void initChainsABRested(T& nums, size_t numsInPair, T& chainAOriginal,
 	}
 	//using nums as mainchain C
 	nums.clear();
-	reserveIfPossible(nums,chainAOriginal.size() + chainBOriginal.size() + rested.size());
 	//add b1 a1 to mainchain C
 	nums.insert(nums.begin(), chainBOriginal.begin(), chainBOriginal.begin() + numsInPair);
 	nums.insert(nums.begin() + numsInPair, chainAOriginal.begin(), chainAOriginal.begin() + numsInPair);
@@ -154,9 +143,9 @@ void updateMainchain(T& nums, size_t numsInPair, size_t NthPairInB,
 
 	#ifdef DEBUG
 	{
-		std::cout << "*itJacob is " << *itJacob << "\n";
+		std::cout << "jacobsthal[i] is " << jacobsthal[i] << "\n";
 		std::cout << "added A"<< beginOfAToSort <<" until A" << endOfAToSort << "to mainchain\n";
-		std::cout << "to insert B"<< NthPairInB <<" until B" << *(itJacob -1) + 1 << "to mainchain\n";
+		std::cout << "to insert B"<< NthPairInB <<" until B" << jacobsthal[i - 1] + 1 << "to mainchain\n";
 		std::cout << "mainchain after A added ";
 		PmergeMe::printContent(nums);
 		std::cout << "==========================================================================\n";
@@ -191,6 +180,8 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 
 	#ifdef DEBUG
 	{
+			std::cout << "newAddedOnMainchain = " << newAddedOnMainchain << "\n"
+				<< "find begin from " << *(nums.begin() + newAddedOnMainchain) << "until " << *(nums.end() -1) <<"\n";
 		std::cout << "A" << toInsertNthPairInB << "doesnt exit:\n" << "compare using binary insertion until A" << chainAOriginal.size()/numsInPair <<" (INCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
@@ -239,7 +230,7 @@ void insertion(T& nums, size_t numsInPair)
 		else if (jacobsthal[i] * numsInPair > chainBOriginal.size())
 			break;
 
-		size_t newAddedOnMainchain = nums.size();
+		size_t newAddedOnMainchain = 0;
 		updateMainchain(nums, numsInPair, NthPairInB, chainAOriginal, i);
 		for (size_t toInsertNthPairInB = NthPairInB; toInsertNthPairInB > jacobsthal[i - 1]; toInsertNthPairInB--)
 		{
@@ -284,21 +275,32 @@ template<typename T>
 void PmergeMe::recursiveSort(T& nums, std::size_t numsInPair)
 {
 	sortPair(nums, numsInPair);
-	if (nums.size() / numsInPair == 2)
+	if (nums.size() / numsInPair <= 2)
 		return ;
 	recursiveSort(nums, numsInPair * 2);
 	insertion(nums, numsInPair);
-	std::cout << "COMPARASION:" << count <<"\n";
 }
 
-template T
-void getNumsFromArg(int argc, char **argv, T& nums)
+int getNumber(char *str)
+{
+	char *endptr = NULL;
+	long int result = std::strtol(str, &endptr, 10);
+	if (str[0] == '\0'
+		||*endptr != '\0'
+		|| result < 0
+		|| result > std::numeric_limits<int>::max())
+		throw std::invalid_argument("argument should be positif integer");
+	return static_cast<int>(result);
+}
+
+template<typename T>
+void PmergeMe::getNumsFromArg(int argc, char **argv, T& nums)
 {
 	if (argc < 2)
 		throw std::invalid_argument("need arguments");
 	if (argc > static_cast<int>(jacobsthal[JACOBSTHAL_MAX - 1]))
 		throw std::invalid_argument("too many numbers");
-	reserveIfPossible(nums, argc - 1);
+	//reserveIfPossible(nums, argc - 1);
 	for (std::size_t i = 1; argv[i]; i++)
 		nums.push_back(getNumber(argv[i]));
 }

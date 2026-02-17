@@ -1,27 +1,34 @@
 #include "PmergeMe.hpp"
+#include <vector>
+#include <deque>
 
-int getNumber(char *str)
-{
-	char *endptr = NULL;
-	long int result = std::strtol(str, &endptr, 10);
-	if (str[0] == '\0'
-		||*endptr != '\0'
-		|| result < 0
-		|| result > std::numeric_limits<int>::max())
-		throw std::invalid_argument("argument should be positif integer");
-	return static_cast<int>(result);
-}
 
 int main(int argc, char** argv)
 {
 	try {
+		count = 0;
 		std::vector<int> numsVector;
-		getNumsFromArg(argc, argv, numsVector);
+		PmergeMe::getNumsFromArg(argc, argv, numsVector);
+		std::cout << "integer sequence before sorting :\n";
+		PmergeMe::printContent(numsVector);
 		PmergeMe::recursiveSort(numsVector, 1);
+		std::cout << "sorted with [std::vector<int>] :\n";
+		PmergeMe::printContent(numsVector);
+		std::cout << "comparaison times by using jacobsthal sequence: "
+			<< count << "\n";
+		std::cout << "\n===================================================\n\n";
 
+
+		count = 0;
 		std::deque<int> numsDeque;
-		getNumsFromArg(argc, argv, numsVector);
-		PmergeMe::recursiveSort(numsVector, 1);
+		PmergeMe::getNumsFromArg(argc, argv, numsDeque);
+		std::cout << "integer sequence before sorting :\n";
+		PmergeMe::printContent(numsDeque);
+		PmergeMe::recursiveSort(numsDeque, 1);
+		std::cout << "sorted with [std::deque<int>] :\n";
+		PmergeMe::printContent(numsDeque);
+		std::cout << "comparaison times by using jacobsthal sequence: "
+			<< count << "\n\n";
 
 	} catch (std::exception& e) {
 		std::cerr << e.what() << std::endl;
