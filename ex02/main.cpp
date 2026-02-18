@@ -4,12 +4,13 @@
 #include <ctime>
 #include <sys/time.h>
 
-double getUtime()
+unsigned long long getUtime()
 {
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000000.0 + tv.tv_usec);
+	return (static_cast<unsigned long long>(tv.tv_sec) * 1000000.0
+		+ static_cast<unsigned long long>(tv.tv_usec));
 }
 
 int main(int argc, char** argv)
@@ -17,11 +18,11 @@ int main(int argc, char** argv)
 	try {
 		count = 0;
 		std::vector<int> numsVector;
-		double startVecTime = getUtime();
+		unsigned long long startVecTime = getUtime();
 		PmergeMe::getNumsFromArg(argc, argv, numsVector);
 		std::vector<int> copy(numsVector);
 		PmergeMe::recursiveSort(numsVector, 1);
-		double vecTime = getUtime() - startVecTime;
+		unsigned long long vecTime = getUtime() - startVecTime;
 		std::cout <<"Before: ";
 		PmergeMe::printContent(copy);
 		std::cout <<"After:  ";
@@ -34,11 +35,11 @@ int main(int argc, char** argv)
 
 		count = 0;
 		std::deque<int> numsDeque;
-		double startDeqTime = getUtime();
+		unsigned long long startDeqTime = getUtime();
 		PmergeMe::getNumsFromArg(argc, argv, numsDeque);
 		std::vector<int> copy2(numsVector);
 		PmergeMe::recursiveSort(numsDeque, 1);
-		double deqTime = getUtime() - startDeqTime;
+		unsigned long long deqTime = getUtime() - startDeqTime;
 		std::cout << "Time to process a range of " << argc -1 
 			<< " elements with [ std::deque<int> ]" << deqTime << " microseconds"<< "\n";
 
