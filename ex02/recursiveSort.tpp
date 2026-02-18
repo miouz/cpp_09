@@ -2,6 +2,7 @@
 #define RECURSIVESORT_TPP
 
 #include <vector>
+#include <set>
 
 /**
  * @brief finds larger element of each pair and place it on the most right place
@@ -192,6 +193,7 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 		toCompareUntilOnMain -= numsInPair;
 	#ifdef DEBUG
 	{
+		std::cout << "newAddedOnMainchain is " << newAddedOnMainchain << "\n";
 		std::cout << "A" << toInsertNthPairInB << " EXIST:\n" << "compare using binary insertion BEFORE A" << *toCompareUntilOnA <<" (EXCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
@@ -299,6 +301,9 @@ void PmergeMe::getNumsFromArg(int argc, char **argv, T& nums)
 	//reserveIfPossible(nums, argc - 1);
 	for (std::size_t i = 1; argv[i]; i++)
 		nums.push_back(getNumber(argv[i]));
+	std::set<int> transfer(nums.begin(), nums.end());
+	if (transfer.size() != nums.size())
+		throw std::invalid_argument("duplicates are not accepted");
 }
 
 #endif
