@@ -17,12 +17,13 @@ int main(int argc, char** argv)
 	try {
 		count = 0;
 		std::vector<int> numsVector;
-		PmergeMe::getNumsFromArg(argc, argv, numsVector);
-		std::cout <<"Before: ";
-		PmergeMe::printContent(numsVector);
 		double startVecTime = getUtime();
+		PmergeMe::getNumsFromArg(argc, argv, numsVector);
+		std::vector<int> copy(numsVector);
 		PmergeMe::recursiveSort(numsVector, 1);
 		double vecTime = getUtime() - startVecTime;
+		std::cout <<"Before: ";
+		PmergeMe::printContent(copy);
 		std::cout <<"After:  ";
 		PmergeMe::printContent(numsVector);
 		std::cout << "comparaison times by using jacobsthal sequence: "
@@ -33,8 +34,9 @@ int main(int argc, char** argv)
 
 		count = 0;
 		std::deque<int> numsDeque;
-		PmergeMe::getNumsFromArg(argc, argv, numsDeque);
 		double startDeqTime = getUtime();
+		PmergeMe::getNumsFromArg(argc, argv, numsDeque);
+		std::vector<int> copy2(numsVector);
 		PmergeMe::recursiveSort(numsDeque, 1);
 		double deqTime = getUtime() - startDeqTime;
 		std::cout << "Time to process a range of " << argc -1 
