@@ -16,6 +16,6 @@ int main(int argc, char** argv)
 		rpn.evaluateInput();
 		std::cout << rpn.getResult() << std::endl;
 	} catch (std::exception& e) {
-		std::cout << "Error " << e.what() << std::endl;
+		std::cerr << "Error " << e.what() << std::endl;
 	}
 }
