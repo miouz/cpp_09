@@ -1,4 +1,5 @@
 #include "BitcoinExchange.hpp"
+#include <fstream>
 
 static const float evaluateValueMin = 0;
 static const float evaluateValueMax = 1000;
@@ -31,7 +32,7 @@ void BitcoinExchange::displayValueFromLine(const std::string& line) const
 void BitcoinExchange::displayValueFromFile(const std::string& fileName) const
 {
 	std::fstream input;
-	input.open(fileName, std::ios::in);
+	input.open(fileName.c_str(), std::fstream::in);
 	std::string	line;
 	bool isFirstLine = true;
 

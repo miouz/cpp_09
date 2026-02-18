@@ -6,6 +6,7 @@
 #include <ios>
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #include <stdexcept>
 #include "utils.hpp"
 

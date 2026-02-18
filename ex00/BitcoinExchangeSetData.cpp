@@ -25,7 +25,7 @@ void BitcoinExchange::addLineToDataBase(const std::string& line)
 
 void BitcoinExchange::setDataBase(const std::string& fileName)
 {
-	std::fstream file(fileName, std::ios::in);
+	std::fstream file(fileName.c_str(), std::fstream::in);
 	std::string	line;
 	size_t	lineNum = 0;
 

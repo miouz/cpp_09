@@ -4,6 +4,8 @@
 #include <string>
 #include <cerrno>
 #include <iostream>
+#include <cstdlib>
+#include <limits>
 
 bool isLeapYear(unsigned int year);
 void getValidPositiveFloatInRange(std::string& str, float& result, float min, float max);
