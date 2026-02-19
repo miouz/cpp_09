@@ -28,7 +28,7 @@ unsigned long long getUtime()
 	struct timeval tv;
 
 	gettimeofday(&tv, NULL);
-	return (static_cast<unsigned long long>(tv.tv_sec) * 1000000.0
+	return (static_cast<unsigned long long>(tv.tv_sec) * 1000000
 		+ static_cast<unsigned long long>(tv.tv_usec));
 }
 
@@ -63,6 +63,6 @@ int main(int argc, char** argv)
 			<< " elements with [ std::deque<int> ]   " << deqTime << " microseconds"<< "\n";
 
 	} catch (std::exception& e) {
-		std::cerr << e.what() << std::endl;
+		std::cerr << "Error: " << e.what() << std::endl;
 	}
 }
