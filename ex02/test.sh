@@ -36,6 +36,7 @@ run_test "empty string" ""
 run_test "invalid input" 10 ab 900 3
 run_test "negatif integer" 100 -1 -3
 run_test "integer overflow" 1 0 2147483648
+run_test "copies" 0 9 456 0 0 9 2
 
 printf "${GREEN}==========SORTING NO ERROR=============${RESET}\n"
 run_test "1 integer" 0
@@ -43,5 +44,7 @@ run_test "2 integers" 98 25
 run_test "3 integers" 692 253 0
 run_test "4 integers" 920 0 45 890
 run_test "7 integers" 5 20 0 987654 258 36 7
-run_test "copies" 0 9 456 0 0 9 2
+run_test "30 numbers" `shuf -i 1-100000 -n 30 | tr "\n" " "`
+run_test "300 numbers" `shuf -i 1-1000 -n 300 | tr "\n" " "`
 run_test "3000 numbers" `shuf -i 1-100000 -n 3000 | tr "\n" " "`
+# run_test "30000 numbers" `shuf -i 1-100000 -n 30000 | tr "\n" " "`
