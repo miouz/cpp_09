@@ -46,16 +46,15 @@ int main(int argc, char** argv)
 		unsigned long long vecTime = getUtime() - startVecTime;
 		std::cout <<"After:  ";
 		PmergeMe::printContent(numsVector);
+		std::cout << "Time to process a range of "
+			<< argc -1 << " elements with [std::vector<int>]: " << vecTime << " us\n";
 
 		#ifdef DEBUG
 
-		std::cout << "\n\n\n\nMax comparaison count should be less than: "
+		std::cout << "\n\nMax comparaison count should be less than: "
 			<< F(argc -1) << "\nReal time count: " << count << "\n\n\n\n";
 
 		#endif
-
-		std::cout << "Time to process a range of "
-			<< argc -1 << " elements with [std::vector<int>]: " << vecTime << " us\n";
 
 		count = 0;
 		std::deque<int> numsDeque;
