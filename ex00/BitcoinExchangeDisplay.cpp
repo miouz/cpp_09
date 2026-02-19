@@ -14,11 +14,11 @@ float BitcoinExchange::getRateOfDay(const std::string& date) const
 
 void BitcoinExchange::displayValueFromLine(const std::string& line) const
 {
-	size_t barPos = line.find("|");
+	size_t barPos = line.find(" | ");
 	if (barPos == std::string::npos)
 		throw std::invalid_argument("bad input => " + line);
 	std::string date = line.substr(0, barPos);
-	std::string value = line.substr(barPos + 1);
+	std::string value = line.substr(barPos + 3);
 	float valueNum = 0;
 
 	if (isValidDate(date) == false)
