@@ -20,7 +20,7 @@ fi
 run_test(){
 	local input="$1"
 	local discription="$2"
-	local output=$($PROGRAM "$input")
+	local output=$($PROGRAM "$input" 2>&1)
 
 	printf "${YELLOW}Test: ${GREEN}[$input] Case: [$discription]\n${RESET}"
 	printf "%s\n" "$output"
