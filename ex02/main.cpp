@@ -16,11 +16,12 @@ int F(int n)
     return sum;
 }
 
-void printArgs(char** argv)
+void printBefore(int argc, char** argv)
 {
-	while(*(++argv))
-		std::cout << std::setw(5) << *argv << ' ';
-	std::cout << "\n";
+	std::vector<int> toPrint;
+	PmergeMe::getNumsFromArg(argc, argv, toPrint);
+	std::cout <<"Before: ";
+	PmergeMe::printContent(toPrint);
 }
 
 unsigned long long getUtime()
@@ -35,8 +36,8 @@ unsigned long long getUtime()
 int main(int argc, char** argv)
 {
 	try {
-		std::cout <<"Before: ";
-		printArgs(argv);
+		printBefore(argc, argv);
+
 		count = 0;
 		std::vector<int> numsVector;
 		unsigned long long startVecTime = getUtime();
@@ -45,13 +46,16 @@ int main(int argc, char** argv)
 		unsigned long long vecTime = getUtime() - startVecTime;
 		std::cout <<"After:  ";
 		PmergeMe::printContent(numsVector);
-		std::cout << "Max comparaison counts should be:"
-			<< F(argc -1) << "\n"
-			<<"Real time comparaison counts: "
-			<< count << "\n"
-			<< "Time to process a range of " << argc -1 
-			<< " elements with [ std::vector<int> ]  " << vecTime << " microseconds"<< "\n";
 
+		#ifdef DEBUG
+
+		std::cout << "\n\n\n\nMax comparaison count should be less than: "
+			<< F(argc -1) << "\nReal time count: " << count << "\n\n\n\n";
+
+		#endif
+
+		std::cout << "Time to process a range of "
+			<< argc -1 << " elements with [std::vector<int>]: " << vecTime << " us\n";
 
 		count = 0;
 		std::deque<int> numsDeque;
@@ -59,8 +63,8 @@ int main(int argc, char** argv)
 		PmergeMe::getNumsFromArg(argc, argv, numsDeque);
 		PmergeMe::recursiveSort(numsDeque, 1);
 		unsigned long long deqTime = getUtime() - startDeqTime;
-		std::cout << "Time to process a range of " << argc -1 
-			<< " elements with [ std::deque<int> ]   " << deqTime << " microseconds"<< "\n";
+		std::cout << "Time to process a range of "
+			<< argc -1 << " elements with [std::deque<int>]:  " << deqTime << " us\n";
 
 	} catch (std::exception& e) {
 		std::cerr << "Error: " << e.what() << std::endl;

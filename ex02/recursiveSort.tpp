@@ -181,7 +181,7 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 
 	#ifdef DEBUG
 	{
-		std::cout << "A" << toInsertNthPairInB << "doesnt exit:\n" << "compare using binary insertion until A" << chainAOriginal.size()/numsInPair <<" (INCLUS)"
+		std::cout << "A" << toInsertNthPairInB << " NOT EXIST:\n" << "compare using binary insertion until A" << chainAOriginal.size()/numsInPair <<" (INCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
 	#endif
@@ -193,7 +193,6 @@ typename T::iterator findAPosOnMain(T&nums, T& chainAOriginal,
 		toCompareUntilOnMain -= numsInPair;
 	#ifdef DEBUG
 	{
-		std::cout << "newAddedOnMainchain is " << newAddedOnMainchain << "\n";
 		std::cout << "A" << toInsertNthPairInB << " EXIST:\n" << "compare using binary insertion BEFORE A" << *toCompareUntilOnA <<" (EXCLUS)"
 				<< " => "<< *toCompareUntilOnMain <<"(inclus)"<< "\n";
 	}
